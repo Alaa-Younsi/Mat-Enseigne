@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <title>Mat Enseigne</title>
+  <rect width="64" height="64" rx="16" fill="#2b1034"/>
+  <path d="M14 46V18h7.2L32 33.2 42.8 18H50v28h-7V30.4l-8.6 12h-4.8L21 30.4V46z" fill="#f6ebd6"/>
+  <circle cx="50" cy="50" r="5" fill="#d9632b"/>
+</svg>

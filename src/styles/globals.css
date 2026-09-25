@@ -1,0 +1,189 @@
+@import "@fontsource-variable/bricolage-grotesque";
+@import "@fontsource-variable/manrope";
+@import "@fontsource/instrument-serif/400.css";
+@import "@fontsource/instrument-serif/400-italic.css";
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------
+ * Design tokens
+ * Palette: Pantone P 15-2 C (crème) · P 95-16 C (aubergine) · P 30-8 C (ember)
+ * ------------------------------------------------------------------ */
+@theme {
+  --color-cream-50: #fbf6ec;
+  --color-cream-100: #f6ebd6;
+  --color-cream-200: #eed9b6;
+  --color-cream-300: #e2c595;
+  --color-cream-400: #d2ad73;
+
+  --color-plum-300: #a883b1;
+  --color-plum-400: #7c5287;
+  --color-plum-500: #5b2d68;
+  --color-plum-600: #4a2156;
+  --color-plum-700: #3b1846;
+  --color-plum-800: #2b1034;
+  --color-plum-900: #1e0a25;
+  --color-plum-950: #140619;
+
+  --color-ember-300: #f2a57a;
+  --color-ember-400: #ea8450;
+  --color-ember-500: #d9632b;
+  --color-ember-600: #bb4e1d;
+  --color-ember-700: #943b16;
+
+  --font-display: "Bricolage Grotesque Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Manrope Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Instrument Serif", ui-serif, Georgia, serif;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
+
+  --animate-marquee: marquee var(--marquee-duration, 40s) linear infinite;
+  --animate-marquee-reverse: marquee-reverse var(--marquee-duration, 40s) linear infinite;
+  --animate-spin-slow: spin 24s linear infinite;
+  --animate-flicker: flicker 5s linear infinite;
+
+  @keyframes marquee {
+    from {
+      transform: translate3d(0, 0, 0);
+    }
+    to {
+      transform: translate3d(-50%, 0, 0);
+    }
+  }
+  @keyframes marquee-reverse {
+    from {
+      transform: translate3d(-50%, 0, 0);
+    }
+    to {
+      transform: translate3d(0, 0, 0);
+    }
+  }
+  @keyframes flicker {
+    0%,
+    18%,
+    22%,
+    25%,
+    53%,
+    57%,
+    100% {
+      opacity: 1;
+    }
+    20%,
+    24%,
+    55% {
+      opacity: 0.35;
+    }
+  }
+}
+
+/* ------------------------------------------------------------------
+ * Base
+ * ------------------------------------------------------------------ */
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply bg-plum-950 font-sans text-cream-100;
+    overflow-x: clip;
+  }
+
+  ::selection {
+    @apply bg-ember-500 text-cream-50;
+  }
+
+  :focus-visible {
+    @apply rounded-sm outline-2 outline-offset-4 outline-ember-400;
+  }
+
+  img {
+    @apply select-none;
+  }
+}
+
+/* Lenis smooth scroll */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis:not(.lenis-autoToggle).lenis-stopped {
+  overflow: clip;
+}
+.lenis [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+/* ------------------------------------------------------------------
+ * Utilities
+ * ------------------------------------------------------------------ */
+@utility container-px {
+  width: 100%;
+  margin-inline: auto;
+  max-width: 88rem;
+  padding-inline: clamp(1.25rem, 4vw, 3rem);
+}
+
+@utility text-balance {
+  text-wrap: balance;
+}
+
+/* Illuminated-sign glow for type */
+@utility text-glow {
+  text-shadow:
+    0 0 0.04em color-mix(in oklab, var(--color-ember-300) 90%, transparent),
+    0 0 0.18em color-mix(in oklab, var(--color-ember-500) 70%, transparent),
+    0 0 0.6em color-mix(in oklab, var(--color-ember-500) 45%, transparent);
+}
+
+/* Outline display type */
+@utility text-outline {
+  color: transparent;
+  -webkit-text-stroke: 1.5px currentColor;
+  paint-order: stroke fill;
+}
+
+/* Film grain overlay (inline SVG noise, no network request) */
+@utility grain {
+  &::after {
+    content: "";
+    pointer-events: none;
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    opacity: 0.09;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+}
+
+@utility mask-fade-x {
+  mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+}
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* biome-ignore-start lint/complexity/noImportantStyles: reduced-motion overrides must win over every animation */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+/* biome-ignore-end lint/complexity/noImportantStyles: end of reduced-motion overrides */
