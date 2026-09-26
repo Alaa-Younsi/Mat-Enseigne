@@ -16,6 +16,8 @@ export function useScrollTo() {
 
       if (lenis) {
         lenis.start()
+        // After a route change the page height differs from Lenis' cached limit — re-measure first.
+        lenis.resize()
         lenis.scrollTo(target, { offset: 0, duration: 1.4 })
       } else if (target === 0) {
         window.scrollTo({ top: 0 })

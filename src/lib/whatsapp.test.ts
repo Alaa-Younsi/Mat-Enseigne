@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { formatQuoteMessage, whatsappLink } from './whatsapp'
+import { formatQuoteMessage, sanitizeText, whatsappLink } from './whatsapp'
 
 describe('whatsappLink', () => {
   it('strips non-digits from the phone number', () => {
@@ -40,5 +40,38 @@ describe('formatQuoteMessage', () => {
       message: 'Bureaux.',
     })
     expect(message).not.toContain('Lieu')
+  })
+
+  it('includes the optional wizard details when provided', () => {
+    const message = formatQuoteMessage({
+      name: 'Léa',
+      phone: '0600000000',
+      service: 'Marquage véhicules',
+      message: 'Deux utilitaires.',
+      dimensions: '2 fourgons',
+      timing: 'Dans le mois',
+      logo: 'J’ai déjà un logo',
+      email: 'lea@example.com',
+      contactPreference: 'WhatsApp',
+    })
+    expect(message).toContain('• Dimensions : 2 fourgons')
+    expect(message).toContain('• Délai : Dans le mois')
+    expect(message).toContain('• Logo : J’ai déjà un logo')
+    expect(message).toContain('• E-mail : lea@example.com')
+    expect(message).toContain('• Préférence de contact : WhatsApp')
+  })
+})
+
+describe('sanitizeText', () => {
+  it('strips invisible and bidi characters and collapses whitespace', () => {
+    expect(sanitizeText('  Sa​rah‮   Martin\t ', 80)).toBe('Sarah Martin')
+  })
+
+  it('keeps paragraphs in multiline mode but limits blank lines', () => {
+    expect(sanitizeText('Ligne 1\n\n\n\nLigne   2', 200, true)).toBe('Ligne 1\n\nLigne 2')
+  })
+
+  it('caps the length', () => {
+    expect(sanitizeText('a'.repeat(50), 10)).toHaveLength(10)
   })
 })

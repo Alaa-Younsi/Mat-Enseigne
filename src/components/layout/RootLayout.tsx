@@ -1,32 +1,37 @@
 import { useLenis } from 'lenis/react'
-import { useEffect } from 'react'
-import { Outlet, useLocation } from 'react-router'
+import { AnimatePresence } from 'motion/react'
+import { useLocation, useOutlet } from 'react-router'
 import { Footer } from './Footer'
 import { Header } from './Header'
+import { PageTransition } from './PageTransition'
 import { Preloader } from './Preloader'
 import { ScrollProgress } from './ScrollProgress'
 import { SmoothScroll } from './SmoothScroll'
 import { WhatsAppFab } from './WhatsAppFab'
 
-/** Reset scroll on route change (hash navigation is handled by the page itself). */
-function ScrollReset() {
+/** Page content with a curtain transition between routes (not between hashes). */
+function AnimatedOutlet() {
+  const outlet = useOutlet()
   const { pathname, hash } = useLocation()
   const lenis = useLenis()
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: pathname is the trigger, not a value we read
-  useEffect(() => {
+  // While the curtain fully covers the screen, jump to the top (or let the page handle its hash).
+  const resetScroll = () => {
     if (hash) return
     lenis?.scrollTo(0, { immediate: true, force: true })
     window.scrollTo(0, 0)
-  }, [pathname, hash, lenis])
+  }
 
-  return null
+  return (
+    <AnimatePresence mode="wait" initial={false} onExitComplete={resetScroll}>
+      <PageTransition key={pathname}>{outlet}</PageTransition>
+    </AnimatePresence>
+  )
 }
 
 export function RootLayout() {
   return (
     <SmoothScroll>
-      <ScrollReset />
       <Preloader />
       <ScrollProgress />
       <a
@@ -37,7 +42,7 @@ export function RootLayout() {
       </a>
       <Header />
       <main id="main">
-        <Outlet />
+        <AnimatedOutlet />
       </main>
       <Footer />
       <WhatsAppFab />

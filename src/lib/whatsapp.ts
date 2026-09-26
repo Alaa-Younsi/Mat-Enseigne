@@ -17,20 +17,57 @@ export interface QuoteRequest {
   service: string
   location?: string | undefined
   message: string
+  email?: string | undefined
+  dimensions?: string | undefined
+  timing?: string | undefined
+  logo?: string | undefined
+  contactPreference?: string | undefined
+}
+
+/**
+ * Clean user input before it goes into the WhatsApp message: strips control, zero-width and
+ * bidi-override characters (used to disguise text), collapses whitespace and caps the length.
+ * `multiline` keeps paragraph breaks (max one blank line); otherwise the value is one line.
+ */
+export function sanitizeText(value: string | undefined, max: number, multiline = false): string {
+  let text = (value ?? '')
+    .normalize('NFC')
+    // biome-ignore lint/suspicious/noControlCharactersInRegex: stripping control characters is the point
+    .replace(/[\u0000-\u0009\u000B-\u001F\u007F]/g, ' ')
+    .replace(/[​-‏‪-‮⁦-⁩﻿]/g, '')
+  text = multiline
+    ? text
+        .split('\n')
+        .map((line) => line.replace(/\s+/g, ' ').trim())
+        .join('\n')
+        .replace(/\n{3,}/g, '\n\n')
+    : text.replace(/\s+/g, ' ')
+  text = text.trim()
+  return text.length > max ? `${text.slice(0, max - 1).trimEnd()}…` : text
 }
 
 /** Format a quote request as a readable WhatsApp message. */
 export function formatQuoteMessage(request: QuoteRequest): string {
+  const detail = (label: string, value: string | undefined, max = 120) => {
+    const clean = sanitizeText(value, max)
+    return clean ? `• ${label} : ${clean}` : null
+  }
+
   const lines = [
     'Bonjour Mat Enseigne,',
     '',
-    `Je m'appelle ${request.name.trim()} et je souhaite un devis.`,
+    `Je m'appelle ${sanitizeText(request.name, 80)} et je souhaite un devis.`,
     '',
-    `• Prestation : ${request.service}`,
-    request.location?.trim() ? `• Lieu : ${request.location.trim()}` : null,
-    `• Téléphone : ${request.phone.trim()}`,
+    detail('Prestation', request.service, 80),
+    detail('Lieu', request.location, 80),
+    detail('Dimensions', request.dimensions),
+    detail('Délai', request.timing),
+    detail('Logo', request.logo),
+    detail('Téléphone', request.phone, 20),
+    detail('E-mail', request.email),
+    detail('Préférence de contact', request.contactPreference, 40),
     '',
-    request.message.trim(),
+    sanitizeText(request.message, 1200, true),
   ]
   return lines.filter((line): line is string => line !== null).join('\n')
 }

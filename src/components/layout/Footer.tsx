@@ -6,6 +6,7 @@ import { Wordmark } from '@/components/ui/Wordmark'
 import { navigation, site } from '@/config/site'
 import { services } from '@/data/services'
 import { useScrollTo } from '@/hooks/useScrollTo'
+import { useSiteLink } from '@/hooks/useSiteLink'
 import { whatsappLink } from '@/lib/whatsapp'
 
 /** Each letter carries its position so keys stay stable without using the map index. */
@@ -15,6 +16,7 @@ const FLICKERING = new Set([1, 7])
 
 export function Footer() {
   const scrollTo = useScrollTo()
+  const link = useSiteLink()
   const year = new Date().getFullYear()
 
   return (
@@ -53,24 +55,17 @@ export function Footer() {
               Navigation
             </h2>
             <ul className="mt-5 space-y-3">
-              {navigation.map((item) => (
-                <li key={item.href}>
+              {[{ label: 'Accueil', to: '/' }, ...navigation].map((item) => (
+                <li key={item.to}>
                   <a
-                    href={`/${item.href}`}
+                    href={item.to}
+                    onClick={link(item.to)}
                     className="text-cream-100/80 transition-colors hover:text-ember-400"
                   >
                     {item.label}
                   </a>
                 </li>
               ))}
-              <li>
-                <a
-                  href="/#contact"
-                  className="text-cream-100/80 transition-colors hover:text-ember-400"
-                >
-                  Contact
-                </a>
-              </li>
             </ul>
           </nav>
 

@@ -1,4 +1,5 @@
 /// <reference types="vitest/config" />
+
 import { fileURLToPath, URL } from 'node:url'
 import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
@@ -8,7 +9,7 @@ import { defineConfig, loadEnv, type Plugin } from 'vite'
 const DEFAULT_SITE_URL = 'https://mat-enseigne.vercel.app'
 
 /** Public routes listed in the sitemap. */
-const ROUTES = ['/', '/mentions-legales']
+const ROUTES = ['/', '/portfolio', '/contact', '/mentions-legales']
 
 /**
  * Injects the canonical site URL into index.html (`%SITE_URL%`)

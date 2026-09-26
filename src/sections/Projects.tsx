@@ -15,6 +15,7 @@ import {
   projectCategories,
   projects,
 } from '@/data/projects'
+import { useSiteLink } from '@/hooks/useSiteLink'
 import { cn } from '@/lib/cn'
 
 /** Aspect ratio per visual weight — CSS columns keep the masonry hole-free under any filter. */
@@ -25,6 +26,7 @@ const sizeClass: Record<Project['size'], string> = {
 }
 
 export function Projects() {
+  const link = useSiteLink()
   const [filter, setFilter] = useState<ProjectCategory | 'all'>('all')
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
 
@@ -154,13 +156,18 @@ export function Projects() {
           <p className="max-w-md text-plum-800/70">
             Nos derniers chantiers sont publiés chaque semaine sur Instagram.
           </p>
-          <ButtonLink
-            href={site.instagram.url}
-            variant="dark"
-            icon={<InstagramIcon className="size-[1.1rem]" />}
-          >
-            @{site.instagram.handle}
-          </ButtonLink>
+          <div className="flex flex-wrap justify-center gap-3">
+            <ButtonLink href="/portfolio" onClick={link('/portfolio')}>
+              Portfolio avant / après
+            </ButtonLink>
+            <ButtonLink
+              href={site.instagram.url}
+              variant="dark"
+              icon={<InstagramIcon className="size-[1.1rem]" />}
+            >
+              @{site.instagram.handle}
+            </ButtonLink>
+          </div>
         </Reveal>
       </div>
 

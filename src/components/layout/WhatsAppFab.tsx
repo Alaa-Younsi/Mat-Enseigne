@@ -1,5 +1,6 @@
 import { AnimatePresence, motion, useMotionValueEvent, useScroll } from 'motion/react'
 import { useState } from 'react'
+import { useLocation } from 'react-router'
 import { WhatsAppIcon } from '@/components/ui/BrandIcons'
 import { whatsappLink } from '@/lib/whatsapp'
 
@@ -7,12 +8,14 @@ import { whatsappLink } from '@/lib/whatsapp'
 export function WhatsAppFab() {
   const { scrollY } = useScroll()
   const [visible, setVisible] = useState(false)
+  // The contact page already puts WhatsApp front and centre.
+  const hidden = useLocation().pathname === '/contact'
 
   useMotionValueEvent(scrollY, 'change', (y) => setVisible(y > window.innerHeight * 0.8))
 
   return (
     <AnimatePresence>
-      {visible && (
+      {visible && !hidden && (
         <motion.a
           href={whatsappLink()}
           target="_blank"

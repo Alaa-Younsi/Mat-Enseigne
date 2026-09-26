@@ -1,16 +1,13 @@
-import { useEffect } from 'react'
 import { Link } from 'react-router'
 import { site } from '@/config/site'
+import { usePageMeta } from '@/hooks/usePageMeta'
 
 /**
  * Mentions légales (required for French professional websites — LCEN art. 6).
  * TODO(client): fill in the bracketed company details before going live.
  */
 export default function LegalPage() {
-  useEffect(() => {
-    document.title = `Mentions légales — ${site.name}`
-    window.scrollTo(0, 0)
-  }, [])
+  usePageMeta({ title: `Mentions légales — ${site.name}`, path: '/mentions-legales' })
 
   return (
     <article className="grain relative min-h-screen bg-cream-100 pt-36 pb-24 text-plum-800">
@@ -56,9 +53,12 @@ export default function LegalPage() {
           <section>
             <h2>Données personnelles</h2>
             <p>
-              Ce site ne dépose aucun cookie de suivi et ne stocke aucune donnée personnelle. Le
-              formulaire de devis prépare un message WhatsApp que vous choisissez d’envoyer : les
-              informations transmises sont alors traitées uniquement pour répondre à votre demande.
+              Ce site ne dépose aucun cookie de suivi et ne stocke aucune donnée personnelle. Les
+              formulaires de devis préparent un message WhatsApp que vous choisissez d’envoyer
+              depuis votre propre compte : les informations transmises sont alors traitées
+              uniquement pour répondre à votre demande.
+            </p>
+            <p>
               Conformément au RGPD, vous pouvez demander l’accès, la rectification ou la suppression
               de vos données en nous contactant au {site.phone.display}.
             </p>

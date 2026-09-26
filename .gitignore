@@ -26,3 +26,7 @@ logs
 .DS_Store
 Thumbs.db
 *.local
+
+# Raw portfolio photos (optimised copies live in public/images/portfolio)
+portfolio-originals/*
+!portfolio-originals/README.md

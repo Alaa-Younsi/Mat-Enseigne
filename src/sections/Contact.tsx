@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Check, MapPin, Phone, Send } from 'lucide-react'
+import { ArrowRight, Check, MapPin, Phone, Send } from 'lucide-react'
 import { AnimatePresence, motion } from 'motion/react'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -7,24 +7,28 @@ import { z } from 'zod'
 import { InstagramIcon, WhatsAppIcon } from '@/components/ui/BrandIcons'
 import { Reveal, SplitReveal } from '@/components/ui/Reveal'
 import { SectionLabel } from '@/components/ui/SectionLabel'
+import { SpamGuard } from '@/components/ui/SpamGuard'
+import { SubmitFeedback } from '@/components/ui/SubmitFeedback'
 import { site } from '@/config/site'
 import { services } from '@/data/services'
+import { useContactSubmit } from '@/hooks/useContactSubmit'
+import { useSiteLink } from '@/hooks/useSiteLink'
 import { cn } from '@/lib/cn'
-import { formatQuoteMessage, whatsappLink } from '@/lib/whatsapp'
+import { whatsappLink } from '@/lib/whatsapp'
 
 const FR_PHONE = /^(?:\+33\s?|0)[1-9](?:[\s.-]?\d{2}){4}$/
 
 const serviceOptions = [...services.map((s) => s.title), 'Autre / plusieurs prestations'] as const
 
 const quoteSchema = z.object({
-  name: z.string().trim().min(2, 'Indiquez votre nom (2 caractères minimum).').max(80),
-  phone: z.string().trim().regex(FR_PHONE, 'Numéro de téléphone invalide (ex. 06 12 34 56 78).'),
+  name: z.string().trim().min(2, 'Indiquez votre nom.').max(80),
+  phone: z.string().trim().regex(FR_PHONE, 'Numéro invalide (06 12 34 56 78).'),
   service: z.string().min(1, 'Choisissez une prestation.'),
   location: z.string().trim().max(80).optional(),
   message: z
     .string()
     .trim()
-    .min(10, 'Décrivez votre projet en quelques mots (10 caractères minimum).')
+    .min(10, '10 caractères minimum.')
     .max(1200, '1200 caractères maximum.'),
 })
 
@@ -35,32 +39,36 @@ const fieldClass =
 const labelClass =
   'pointer-events-none absolute top-2 left-4 font-medium text-[0.7rem] text-plum-800/60 uppercase tracking-[0.14em]'
 
+/** Zero-height error slot: messages never shift the layout under the pointer. */
 function FieldError({ id, message }: { id: string; message: string | undefined }) {
   return (
-    <AnimatePresence>
-      {message && (
-        <motion.p
-          id={id}
-          role="alert"
-          initial={{ opacity: 0, height: 0 }}
-          animate={{ opacity: 1, height: 'auto' }}
-          exit={{ opacity: 0, height: 0 }}
-          className="mt-1.5 pl-1 text-ember-700 text-sm"
-        >
-          {message}
-        </motion.p>
-      )}
-    </AnimatePresence>
+    <div className="relative h-0">
+      <AnimatePresence>
+        {message && (
+          <motion.p
+            id={id}
+            role="alert"
+            initial={{ opacity: 0, y: -4 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            className="absolute top-1 left-1 truncate text-[0.8rem] text-ember-700 leading-5"
+          >
+            {message}
+          </motion.p>
+        )}
+      </AnimatePresence>
+    </div>
   )
 }
 
 function QuoteFormCard() {
+  const contact = useContactSubmit()
   const [sent, setSent] = useState(false)
   const {
     register,
     handleSubmit,
     reset,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<QuoteForm>({
     resolver: zodResolver(quoteSchema),
     defaultValues: { name: '', phone: '', service: '', location: '', message: '' },
@@ -68,13 +76,14 @@ function QuoteFormCard() {
   })
 
   const onSubmit = (data: QuoteForm) => {
-    window.open(whatsappLink(formatQuoteMessage(data)), '_blank', 'noopener,noreferrer')
-    setSent(true)
-    reset()
+    if (contact.submit(data)) {
+      setSent(true)
+      reset()
+    }
   }
 
   return (
-    <div className="relative overflow-hidden rounded-[2rem] bg-cream-100 p-6 text-plum-900 shadow-[0_40px_120px_-40px_rgba(217,99,43,0.45)] sm:p-10">
+    <div className="relative overflow-clip rounded-[2rem] bg-cream-100 p-6 text-plum-900 shadow-[0_40px_120px_-40px_rgba(217,99,43,0.45)] sm:p-10">
       <AnimatePresence mode="wait" initial={false}>
         {sent ? (
           <motion.div
@@ -92,12 +101,26 @@ function QuoteFormCard() {
               Presque terminé !
             </h3>
             <p className="mt-3 max-w-sm text-plum-800/70">
-              WhatsApp s’est ouvert avec votre demande pré-remplie. Il ne vous reste qu’à appuyer
-              sur « Envoyer ».
+              WhatsApp s’est ouvert avec votre demande pré-remplie. Appuyez sur « Envoyer » pour la
+              transmettre à Mat Enseigne.
             </p>
+            {contact.link && (
+              <a
+                href={contact.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-6 inline-flex items-center gap-2 rounded-full bg-plum-800 px-5 py-3 font-semibold text-cream-50 transition-colors hover:bg-plum-700"
+              >
+                <WhatsAppIcon className="size-4" />
+                WhatsApp ne s’est pas ouvert ?
+              </a>
+            )}
             <button
               type="button"
-              onClick={() => setSent(false)}
+              onClick={() => {
+                contact.reset()
+                setSent(false)
+              }}
               className="mt-8 font-medium text-ember-600 underline underline-offset-4 hover:text-ember-700"
             >
               Faire une nouvelle demande
@@ -111,7 +134,7 @@ function QuoteFormCard() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="grid gap-4 sm:grid-cols-2"
+            className="grid gap-x-4 gap-y-7 sm:grid-cols-2"
             aria-label="Demande de devis"
           >
             <div className="sm:col-span-2">
@@ -227,16 +250,21 @@ function QuoteFormCard() {
               <FieldError id="message-error" message={errors.message?.message} />
             </div>
 
+            <div className="grid gap-4 sm:col-span-2">
+              <SpamGuard honeypot={contact.honeypot} />
+              <SubmitFeedback error={contact.error} />
+            </div>
+
             <div className="flex flex-col gap-4 sm:col-span-2 sm:flex-row sm:items-center sm:justify-between">
               <p className="text-plum-800/55 text-xs leading-relaxed sm:max-w-xs">
-                Votre demande est envoyée via WhatsApp. Aucune donnée n’est stockée sur ce site.
+                Votre demande s’ouvre dans WhatsApp, prête à être envoyée. Aucune donnée n’est
+                conservée sur ce site.
               </p>
               <button
                 type="submit"
-                disabled={isSubmitting}
-                className="group inline-flex items-center justify-center gap-3 rounded-full bg-ember-500 py-2 pr-2 pl-6 font-display font-semibold text-cream-50 shadow-[0_10px_40px_-12px] shadow-ember-500/70 transition-colors hover:bg-ember-600 disabled:opacity-60"
+                className="group inline-flex items-center justify-center gap-3 rounded-full bg-ember-500 py-2 pr-2 pl-6 font-display font-semibold text-cream-50 shadow-[0_10px_40px_-12px] shadow-ember-500/70 transition-colors hover:bg-ember-600"
               >
-                Envoyer ma demande
+                Envoyer sur WhatsApp
                 <span className="grid size-10 place-items-center rounded-full bg-cream-50 text-ember-600 transition-transform duration-500 ease-out-expo group-hover:rotate-[-20deg]">
                   <Send className="size-4" />
                 </span>
@@ -274,11 +302,12 @@ const channels = [
 ] as const
 
 export function Contact() {
+  const link = useSiteLink()
   return (
     <section
       id="contact"
       aria-labelledby="contact-title"
-      className="grain relative overflow-hidden bg-plum-900 py-24 text-cream-100 sm:py-32"
+      className="grain relative overflow-clip bg-plum-900 py-24 text-cream-100 sm:py-32"
     >
       <div aria-hidden="true" className="pointer-events-none absolute inset-0">
         <div className="absolute top-1/3 -left-40 size-[36rem] rounded-full bg-ember-600/25 blur-[140px]" />
@@ -307,6 +336,14 @@ export function Contact() {
               Envoyez une photo de votre devanture, de votre vitrine ou de votre véhicule : nous
               vous proposons une solution et un devis clair.
             </p>
+            <a
+              href="/contact"
+              onClick={link('/contact')}
+              className="group mt-5 inline-flex items-center gap-2 font-medium text-ember-400 transition-colors hover:text-ember-300"
+            >
+              Projet plus complexe ? Utilisez l’assistant de devis
+              <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
+            </a>
           </Reveal>
 
           <ul className="mt-10 space-y-3">

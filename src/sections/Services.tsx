@@ -5,7 +5,7 @@ import { Img } from '@/components/ui/Img'
 import { Reveal, SplitReveal } from '@/components/ui/Reveal'
 import { SectionLabel } from '@/components/ui/SectionLabel'
 import { services } from '@/data/services'
-import { useScrollTo } from '@/hooks/useScrollTo'
+import { useSiteLink } from '@/hooks/useSiteLink'
 import { cn } from '@/lib/cn'
 
 const PREVIEW_W = 340
@@ -14,7 +14,7 @@ const PREVIEW_H = 420
 export function Services() {
   const listRef = useRef<HTMLUListElement>(null)
   const [active, setActive] = useState<number | null>(null)
-  const scrollTo = useScrollTo()
+  const link = useSiteLink()
 
   const x = useSpring(useMotionValue(0), { stiffness: 180, damping: 22, mass: 0.5 })
   const y = useSpring(useMotionValue(0), { stiffness: 180, damping: 22, mass: 0.5 })
@@ -139,14 +139,14 @@ export function Services() {
                   </ul>
                 </div>
 
-                <button
-                  type="button"
-                  onClick={() => scrollTo('#contact')}
+                <a
+                  href={`/contact?service=${service.id}`}
+                  onClick={link(`/contact?service=${service.id}`)}
                   aria-label={`Demander un devis : ${service.title}`}
                   className="hidden size-14 place-items-center justify-self-end rounded-full ring-1 ring-cream-100/25 transition-all duration-500 group-hover:rotate-45 group-hover:bg-plum-950 group-hover:ring-plum-950 lg:col-span-1 lg:grid"
                 >
                   <ArrowUpRight className="size-5" />
-                </button>
+                </a>
               </Reveal>
             </li>
           ))}

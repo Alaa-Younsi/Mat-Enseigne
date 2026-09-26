@@ -27,8 +27,9 @@ export const site = {
 export type Site = typeof site
 
 export const navigation = [
-  { label: 'Services', href: '#services' },
-  { label: 'Réalisations', href: '#realisations' },
-  { label: 'Méthode', href: '#methode' },
-  { label: 'FAQ', href: '#faq' },
+  { label: 'Services', to: '/#services' },
+  { label: 'Portfolio', to: '/portfolio' },
+  { label: 'Méthode', to: '/#methode' },
+  { label: 'FAQ', to: '/#faq' },
+  { label: 'Contact', to: '/contact' },
 ] as const

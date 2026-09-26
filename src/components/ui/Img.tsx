@@ -35,7 +35,8 @@ export function Img({
       onLoad={() => setLoaded(true)}
       className={cn(
         'transition-[opacity,filter] duration-700 ease-out-expo',
-        loaded ? 'opacity-100 blur-0' : 'opacity-0 blur-md',
+        // `filter-none` (not blur-0) once loaded, so big images don't stay on a filter layer.
+        loaded ? 'opacity-100 filter-none' : 'opacity-0 blur-md',
         className,
       )}
       {...rest}

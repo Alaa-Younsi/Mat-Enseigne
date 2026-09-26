@@ -17,6 +17,7 @@ import { site } from '@/config/site'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
 import { useScrollRange } from '@/hooks/useScrollRange'
 import { useScrollTo } from '@/hooks/useScrollTo'
+import { useSiteLink } from '@/hooks/useSiteLink'
 
 const EASE = [0.16, 1, 0.3, 1] as const
 
@@ -25,6 +26,7 @@ export function Hero() {
   const reduce = useReducedMotion()
   const isDesktop = useMediaQuery('(min-width: 1024px)')
   const scrollTo = useScrollTo()
+  const link = useSiteLink()
 
   // Scroll-linked exit: content drifts up, image zooms.
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] })
@@ -126,15 +128,12 @@ export function Hero() {
               Demander un devis
             </ButtonLink>
             <ButtonLink
-              href="#realisations"
+              href="/portfolio"
               variant="outline"
               className="text-cream-100"
-              onClick={(event) => {
-                event.preventDefault()
-                scrollTo('#realisations')
-              }}
+              onClick={link('/portfolio')}
             >
-              Nos réalisations
+              Avant / après
             </ButtonLink>
           </motion.div>
         </div>

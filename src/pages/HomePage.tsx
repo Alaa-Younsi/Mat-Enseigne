@@ -1,11 +1,13 @@
 import { useEffect } from 'react'
 import { useLocation } from 'react-router'
+import { usePageMeta } from '@/hooks/usePageMeta'
 import { useScrollTo } from '@/hooks/useScrollTo'
 import { Contact } from '@/sections/Contact'
 import { Faq } from '@/sections/Faq'
 import { Hero } from '@/sections/Hero'
 import { Manifesto } from '@/sections/Manifesto'
 import { MarqueeBand } from '@/sections/MarqueeBand'
+import { PortfolioTeaser } from '@/sections/PortfolioTeaser'
 import { Process } from '@/sections/Process'
 import { Projects } from '@/sections/Projects'
 import { Services } from '@/sections/Services'
@@ -22,9 +24,10 @@ export default function HomePage() {
     return () => window.clearTimeout(timer)
   }, [hash, scrollTo])
 
-  useEffect(() => {
-    document.title = 'Mat Enseigne — Enseignes, adhésifs & marquage véhicules à Paris'
-  }, [])
+  usePageMeta({
+    title: 'Mat Enseigne — Enseignes, adhésifs & marquage véhicules à Paris',
+    path: '/',
+  })
 
   return (
     <>
@@ -32,6 +35,7 @@ export default function HomePage() {
       <MarqueeBand />
       <Manifesto />
       <Services />
+      <PortfolioTeaser />
       <Spotlight />
       <Projects />
       <Process />

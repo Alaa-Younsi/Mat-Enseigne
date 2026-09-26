@@ -1,13 +1,13 @@
 import { useLenis } from 'lenis/react'
 import { Menu, X } from 'lucide-react'
 import { AnimatePresence, motion, useMotionValueEvent, useScroll } from 'motion/react'
-import { type MouseEvent, useEffect, useState } from 'react'
-import { Link, useLocation, useNavigate } from 'react-router'
+import { useEffect, useState } from 'react'
+import { Link, useLocation } from 'react-router'
 import { InstagramIcon, WhatsAppIcon } from '@/components/ui/BrandIcons'
 import { ButtonLink } from '@/components/ui/Button'
 import { Wordmark } from '@/components/ui/Wordmark'
 import { navigation, site } from '@/config/site'
-import { useScrollTo } from '@/hooks/useScrollTo'
+import { useSiteLink } from '@/hooks/useSiteLink'
 import { cn } from '@/lib/cn'
 import { whatsappLink } from '@/lib/whatsapp'
 
@@ -19,9 +19,8 @@ export function Header() {
   const [hidden, setHidden] = useState(false)
   const { scrollY } = useScroll()
   const lenis = useLenis()
-  const scrollTo = useScrollTo()
+  const link = useSiteLink()
   const { pathname } = useLocation()
-  const navigate = useNavigate()
 
   useMotionValueEvent(scrollY, 'change', (y) => {
     const previous = scrollY.getPrevious() ?? 0
@@ -47,16 +46,9 @@ export function Header() {
     return () => window.removeEventListener('keydown', onKey)
   }, [open])
 
-  const handleAnchor = (event: MouseEvent<HTMLAnchorElement>, hash: string) => {
-    event.preventDefault()
-    setOpen(false)
-    if (pathname === '/') {
-      // Let the menu start closing before scrolling.
-      window.setTimeout(() => scrollTo(hash), open ? 350 : 0)
-    } else {
-      navigate(`/${hash}`)
-    }
-  }
+  /** Close the menu first, then follow the link once the menu has started closing. */
+  const go = (to: string) => link(to, { delay: open ? 350 : 0, onNavigate: () => setOpen(false) })
+  const isCurrent = (to: string) => !to.includes('#') && pathname === to
 
   return (
     <>
@@ -75,9 +67,7 @@ export function Header() {
         >
           <Link
             to="/"
-            onClick={(event) => {
-              if (pathname === '/') handleAnchor(event, '#top')
-            }}
+            onClick={go('/')}
             className="relative z-10 text-[1.35rem] text-cream-50"
             aria-label={`${site.name} — accueil`}
           >
@@ -87,11 +77,15 @@ export function Header() {
           <nav aria-label="Navigation principale" className="hidden lg:block">
             <ul className="flex items-center gap-1">
               {navigation.map((item) => (
-                <li key={item.href}>
+                <li key={item.to}>
                   <a
-                    href={`/${item.href}`}
-                    onClick={(event) => handleAnchor(event, item.href)}
-                    className="group relative block overflow-hidden rounded-full px-4 py-2 font-medium text-[0.92rem] text-cream-100/85 transition-colors hover:text-cream-50"
+                    href={item.to}
+                    onClick={go(item.to)}
+                    aria-current={isCurrent(item.to) ? 'page' : undefined}
+                    className={cn(
+                      'group relative block overflow-hidden rounded-full px-4 py-2 font-medium text-[0.92rem] transition-colors hover:text-cream-50',
+                      isCurrent(item.to) ? 'bg-cream-100/10 text-cream-50' : 'text-cream-100/85',
+                    )}
                   >
                     <span className="block transition-transform duration-500 ease-out-expo group-hover:-translate-y-full">
                       {item.label}
@@ -120,8 +114,8 @@ export function Header() {
             </a>
             <div className="hidden sm:block">
               <ButtonLink
-                href="/#contact"
-                onClick={(event) => handleAnchor(event, '#contact')}
+                href="/contact"
+                onClick={go('/contact')}
                 className="py-1 pl-5 text-sm [&>span:last-child]:size-8"
               >
                 Devis gratuit
@@ -156,11 +150,12 @@ export function Header() {
           >
             <nav aria-label="Navigation mobile" className="flex-1">
               <ul className="space-y-1">
-                {[...navigation, { label: 'Contact', href: '#contact' }].map((item, i) => (
-                  <li key={item.href} className="overflow-hidden">
+                {navigation.map((item, i) => (
+                  <li key={item.to} className="overflow-hidden">
                     <motion.a
-                      href={`/${item.href}`}
-                      onClick={(event) => handleAnchor(event, item.href)}
+                      href={item.to}
+                      onClick={go(item.to)}
+                      aria-current={isCurrent(item.to) ? 'page' : undefined}
                       className="flex items-baseline gap-4 py-2 font-display font-bold text-[clamp(2.4rem,11vw,4rem)] text-cream-50 leading-none tracking-tight"
                       initial={{ y: '100%' }}
                       animate={{ y: '0%' }}
