@@ -135,9 +135,22 @@ export function Footer() {
 
       <div className="container-px relative z-10">
         <div className="flex flex-col gap-4 border-cream-100/10 border-t pt-7 pb-24 text-cream-100/50 text-sm sm:flex-row sm:items-center sm:justify-between sm:pr-24 sm:pb-7">
-          <p className="flex items-center gap-2">
-            <Spark className="size-3 text-ember-500" />© {year} {site.name}. Tous droits réservés.
-          </p>
+          <div className="space-y-1.5">
+            <p className="flex items-center gap-2">
+              <Spark className="size-3 text-ember-500" />© {year} {site.name}. Tous droits réservés.
+            </p>
+            <p>
+              Website Developed by{' '}
+              <a
+                href="https://alaayounsi.vercel.app/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-cream-100/80 underline decoration-cream-100/30 underline-offset-4 transition-colors hover:text-ember-400 hover:decoration-ember-400"
+              >
+                Alaa Younsi
+              </a>
+            </p>
+          </div>
           <div className="flex items-center gap-6">
             <Link to="/mentions-legales" className="transition-colors hover:text-cream-50">
               Mentions légales
