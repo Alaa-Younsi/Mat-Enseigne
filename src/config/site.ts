@@ -13,11 +13,6 @@ export const site = {
   locale: 'fr_FR',
   area: 'Paris & Île-de-France',
   city: 'Paris',
-  phone: {
-    display: '06 05 89 44 11',
-    e164: '+33605894411',
-  },
-  whatsapp: '33605894411',
   instagram: {
     handle: 'mat.enseigne',
     url: 'https://www.instagram.com/mat.enseigne/',

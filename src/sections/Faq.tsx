@@ -8,7 +8,6 @@ import { SectionLabel } from '@/components/ui/SectionLabel'
 import { Stripes } from '@/components/ui/Shapes'
 import { type Faq as FaqItem, faqs } from '@/data/content'
 import { cn } from '@/lib/cn'
-import { whatsappLink } from '@/lib/whatsapp'
 
 function FaqRow({ item, open, onToggle }: { item: FaqItem; open: boolean; onToggle: () => void }) {
   const id = useId()
@@ -91,11 +90,7 @@ export function Faq() {
               Une question qui n’est pas ici ? Écrivez-nous directement, on vous répond rapidement.
             </p>
             <div className="mt-8">
-              <ButtonLink
-                href={whatsappLink()}
-                variant="dark"
-                icon={<WhatsAppIcon className="size-[1.1rem]" />}
-              >
+              <ButtonLink variant="dark" icon={<WhatsAppIcon className="size-[1.1rem]" />}>
                 Poser ma question
               </ButtonLink>
             </div>

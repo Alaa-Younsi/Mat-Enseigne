@@ -30,8 +30,6 @@ export default function LegalPage() {
               <br />
               TVA intracommunautaire : [numéro]
               <br />
-              Téléphone : {site.phone.display}
-              <br />
               Directeur de la publication : [nom du responsable]
             </p>
           </section>
@@ -54,13 +52,12 @@ export default function LegalPage() {
             <h2>Données personnelles</h2>
             <p>
               Ce site ne dépose aucun cookie de suivi et ne stocke aucune donnée personnelle. Les
-              formulaires de devis préparent un message WhatsApp que vous choisissez d’envoyer
-              depuis votre propre compte : les informations transmises sont alors traitées
-              uniquement pour répondre à votre demande.
+              formulaires de devis sont des démonstrations : les informations saisies ne sont ni
+              envoyées ni conservées.
             </p>
             <p>
               Conformément au RGPD, vous pouvez demander l’accès, la rectification ou la suppression
-              de vos données en nous contactant au {site.phone.display}.
+              de vos données en nous contactant sur Instagram (@{site.instagram.handle}).
             </p>
           </section>
         </div>

@@ -14,7 +14,6 @@ import { categoryLabel, type ProjectCategory } from '@/data/projects'
 import { usePageMeta } from '@/hooks/usePageMeta'
 import { useSiteLink } from '@/hooks/useSiteLink'
 import { cn } from '@/lib/cn'
-import { whatsappLink } from '@/lib/whatsapp'
 
 const EASE = [0.16, 1, 0.3, 1] as const
 
@@ -358,11 +357,7 @@ export default function PortfolioPage() {
             <ButtonLink href="/contact" onClick={link('/contact')}>
               Demander un devis
             </ButtonLink>
-            <ButtonLink
-              href={whatsappLink()}
-              variant="dark"
-              icon={<WhatsAppIcon className="size-[1.1rem]" />}
-            >
+            <ButtonLink variant="dark" icon={<WhatsAppIcon className="size-[1.1rem]" />}>
               WhatsApp
             </ButtonLink>
           </Reveal>

@@ -9,7 +9,6 @@ import { Wordmark } from '@/components/ui/Wordmark'
 import { navigation, site } from '@/config/site'
 import { useSiteLink } from '@/hooks/useSiteLink'
 import { cn } from '@/lib/cn'
-import { whatsappLink } from '@/lib/whatsapp'
 
 const EASE = [0.76, 0, 0.24, 1] as const
 
@@ -177,15 +176,10 @@ export function Header() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5 }}
             >
-              <a
-                href={whatsappLink()}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-3 font-display font-semibold text-cream-50 text-xl"
-              >
+              <span className="flex items-center gap-3 font-display font-semibold text-cream-50 text-xl">
                 <WhatsAppIcon className="size-6 text-ember-400" />
-                {site.phone.display}
-              </a>
+                WhatsApp
+              </span>
               <a
                 href={site.instagram.url}
                 target="_blank"

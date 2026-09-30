@@ -7,7 +7,6 @@ import { navigation, site } from '@/config/site'
 import { services } from '@/data/services'
 import { useScrollTo } from '@/hooks/useScrollTo'
 import { useSiteLink } from '@/hooks/useSiteLink'
-import { whatsappLink } from '@/lib/whatsapp'
 
 /** Each letter carries its position so keys stay stable without using the map index. */
 const GIANT = [...'MAT ENSEIGNE'].map((char, position) => ({ char, position }))
@@ -29,15 +28,13 @@ export function Footer() {
               {site.tagline}. Conception, fabrication et pose d’enseignes à {site.area}.
             </p>
             <div className="mt-7 flex gap-3">
-              <a
-                href={whatsappLink()}
-                target="_blank"
-                rel="noopener noreferrer"
+              <span
+                role="img"
                 aria-label="WhatsApp"
                 className="grid size-12 place-items-center rounded-full bg-cream-100/5 ring-1 ring-cream-100/15 transition-colors hover:bg-ember-500 hover:ring-ember-500"
               >
                 <WhatsAppIcon className="size-5" />
-              </a>
+              </span>
               <a
                 href={site.instagram.url}
                 target="_blank"
@@ -87,14 +84,6 @@ export function Footer() {
               Contact
             </h2>
             <ul className="mt-5 space-y-3 text-cream-100/80">
-              <li>
-                <a
-                  href={`tel:${site.phone.e164}`}
-                  className="transition-colors hover:text-ember-400"
-                >
-                  {site.phone.display}
-                </a>
-              </li>
               <li>
                 <a
                   href={site.instagram.url}

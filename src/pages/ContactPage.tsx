@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { ArrowLeft, ArrowRight, Check, Clock, MapPin, Phone, Send, Sparkles } from 'lucide-react'
+import { ArrowLeft, ArrowRight, Check, Clock, MapPin, Send, Sparkles } from 'lucide-react'
 import { AnimatePresence, motion } from 'motion/react'
 import { useRef, useState } from 'react'
 import { type FieldPath, type UseFormRegisterReturn, useForm } from 'react-hook-form'
@@ -17,7 +17,6 @@ import { services } from '@/data/services'
 import { useContactSubmit } from '@/hooks/useContactSubmit'
 import { usePageMeta } from '@/hooks/usePageMeta'
 import { cn } from '@/lib/cn'
-import { whatsappLink } from '@/lib/whatsapp'
 
 const EASE = [0.16, 1, 0.3, 1] as const
 const FR_PHONE = /^(?:\+33\s?|0)[1-9](?:[\s.-]?\d{2}){4}$/
@@ -206,8 +205,8 @@ function QuoteWizard() {
           Merci {sent.name.split(' ')[0]} !
         </h2>
         <p className="mt-3 max-w-md text-plum-800/70 leading-relaxed">
-          WhatsApp s’est ouvert avec votre demande pré-remplie. Appuyez sur « Envoyer » pour la
-          transmettre — vous pourrez y joindre des photos de votre façade.
+          Votre demande a bien été validée, mais ce site est une vitrine : aucun message n’a été
+          envoyé et aucune donnée n’a été conservée.
         </p>
         <dl className="mt-8 grid w-full max-w-md gap-2 rounded-2xl bg-plum-950/[0.04] p-5 text-left text-sm ring-1 ring-plum-900/10">
           {[
@@ -222,11 +221,6 @@ function QuoteWizard() {
           ))}
         </dl>
         <div className="mt-8 flex flex-wrap justify-center gap-3">
-          {contact.link && (
-            <ButtonLink href={contact.link} icon={<WhatsAppIcon className="size-[1.1rem]" />}>
-              Rouvrir WhatsApp
-            </ButtonLink>
-          )}
           <button
             type="button"
             onClick={() => {
@@ -514,8 +508,7 @@ function QuoteWizard() {
                 <SpamGuard honeypot={contact.honeypot} />
                 <SubmitFeedback error={contact.error} />
                 <p className="text-plum-800/55 text-xs leading-relaxed">
-                  Votre demande s’ouvre dans WhatsApp, prête à être envoyée. Aucune donnée n’est
-                  conservée sur ce site.
+                  Formulaire de démonstration : aucune donnée n’est envoyée ni conservée.
                 </p>
               </div>
             )}
@@ -558,7 +551,7 @@ function QuoteWizard() {
             className="group inline-flex items-center gap-3 rounded-full bg-ember-500 py-2 pr-2 pl-6 font-display font-semibold text-cream-50 shadow-[0_10px_40px_-12px] shadow-ember-500/70 transition-colors hover:bg-ember-600"
           >
             <span className="sm:hidden">Envoyer</span>
-            <span className="hidden sm:inline">Envoyer sur WhatsApp</span>
+            <span className="hidden sm:inline">Envoyer ma demande</span>
             <span className="grid size-10 place-items-center rounded-full bg-cream-50 text-ember-600 transition-transform duration-500 ease-out-expo group-hover:rotate-[-20deg]">
               <Send className="size-4" />
             </span>
@@ -635,8 +628,8 @@ export default function ContactPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.9, ease: EASE, delay: 0.5 }}
             >
-              Trois questions, une minute, et votre demande part directement sur notre WhatsApp.
-              Vous préférez échanger tout de suite ? On est là.
+              Trois questions, une minute, et votre demande est prête. Un formulaire de
+              démonstration : rien n’est envoyé.
             </motion.p>
 
             <motion.div
@@ -645,16 +638,8 @@ export default function ContactPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.9, ease: EASE, delay: 0.65 }}
             >
-              <ButtonLink href={whatsappLink()} icon={<WhatsAppIcon className="size-[1.1rem]" />}>
+              <ButtonLink icon={<WhatsAppIcon className="size-[1.1rem]" />}>
                 WhatsApp direct
-              </ButtonLink>
-              <ButtonLink
-                href={`tel:${site.phone.e164}`}
-                variant="outline"
-                className="text-cream-100"
-                icon={<Phone className="size-4" />}
-              >
-                {site.phone.display}
               </ButtonLink>
             </motion.div>
 

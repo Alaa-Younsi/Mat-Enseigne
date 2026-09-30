@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { ArrowRight, Check, MapPin, Phone, Send } from 'lucide-react'
+import { ArrowRight, Check, MapPin, Send } from 'lucide-react'
 import { AnimatePresence, motion } from 'motion/react'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -14,7 +14,6 @@ import { services } from '@/data/services'
 import { useContactSubmit } from '@/hooks/useContactSubmit'
 import { useSiteLink } from '@/hooks/useSiteLink'
 import { cn } from '@/lib/cn'
-import { whatsappLink } from '@/lib/whatsapp'
 
 const FR_PHONE = /^(?:\+33\s?|0)[1-9](?:[\s.-]?\d{2}){4}$/
 
@@ -98,23 +97,12 @@ function QuoteFormCard() {
               <Check className="size-7" />
             </span>
             <h3 className="mt-6 font-display font-bold text-3xl tracking-tight">
-              Presque terminé !
+              Formulaire de démonstration
             </h3>
             <p className="mt-3 max-w-sm text-plum-800/70">
-              WhatsApp s’est ouvert avec votre demande pré-remplie. Appuyez sur « Envoyer » pour la
-              transmettre à Mat Enseigne.
+              Votre demande a bien été validée, mais ce site est une vitrine : aucun message n’a été
+              envoyé et aucune donnée n’a été conservée.
             </p>
-            {contact.link && (
-              <a
-                href={contact.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-6 inline-flex items-center gap-2 rounded-full bg-plum-800 px-5 py-3 font-semibold text-cream-50 transition-colors hover:bg-plum-700"
-              >
-                <WhatsAppIcon className="size-4" />
-                WhatsApp ne s’est pas ouvert ?
-              </a>
-            )}
             <button
               type="button"
               onClick={() => {
@@ -257,14 +245,13 @@ function QuoteFormCard() {
 
             <div className="flex flex-col gap-4 sm:col-span-2 sm:flex-row sm:items-center sm:justify-between">
               <p className="text-plum-800/55 text-xs leading-relaxed sm:max-w-xs">
-                Votre demande s’ouvre dans WhatsApp, prête à être envoyée. Aucune donnée n’est
-                conservée sur ce site.
+                Formulaire de démonstration : aucune donnée n’est envoyée ni conservée.
               </p>
               <button
                 type="submit"
                 className="group inline-flex items-center justify-center gap-3 rounded-full bg-ember-500 py-2 pr-2 pl-6 font-display font-semibold text-cream-50 shadow-[0_10px_40px_-12px] shadow-ember-500/70 transition-colors hover:bg-ember-600"
               >
-                Envoyer sur WhatsApp
+                Envoyer ma demande
                 <span className="grid size-10 place-items-center rounded-full bg-cream-50 text-ember-600 transition-transform duration-500 ease-out-expo group-hover:rotate-[-20deg]">
                   <Send className="size-4" />
                 </span>
@@ -278,18 +265,12 @@ function QuoteFormCard() {
 }
 
 const channels = [
+  // Demo: the WhatsApp card is shown but links nowhere.
   {
     label: 'WhatsApp',
-    value: site.phone.display,
-    href: whatsappLink(),
+    value: 'Message direct',
+    href: undefined,
     icon: WhatsAppIcon,
-    external: true,
-  },
-  {
-    label: 'Téléphone',
-    value: site.phone.display,
-    href: `tel:${site.phone.e164}`,
-    icon: Phone,
     external: false,
   },
   {

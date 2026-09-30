@@ -2,9 +2,8 @@ import { AnimatePresence, motion, useMotionValueEvent, useScroll } from 'motion/
 import { useState } from 'react'
 import { useLocation } from 'react-router'
 import { WhatsAppIcon } from '@/components/ui/BrandIcons'
-import { whatsappLink } from '@/lib/whatsapp'
 
-/** Floating WhatsApp shortcut, revealed once the visitor scrolls past the hero. */
+/** Floating WhatsApp badge (decorative in this demo: it links nowhere), revealed past the hero. */
 export function WhatsAppFab() {
   const { scrollY } = useScroll()
   const [visible, setVisible] = useState(false)
@@ -16,11 +15,9 @@ export function WhatsAppFab() {
   return (
     <AnimatePresence>
       {visible && !hidden && (
-        <motion.a
-          href={whatsappLink()}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="Discuter sur WhatsApp"
+        <motion.span
+          role="img"
+          aria-label="WhatsApp"
           className="group fixed right-4 bottom-4 z-40 grid size-14 place-items-center rounded-full bg-ember-500 text-cream-50 shadow-[0_12px_40px_-8px] shadow-ember-600/70 sm:right-6 sm:bottom-6 sm:size-16"
           initial={{ scale: 0, rotate: -45 }}
           animate={{ scale: 1, rotate: 0 }}
@@ -34,7 +31,7 @@ export function WhatsAppFab() {
             className="absolute inset-0 animate-ping rounded-full bg-ember-500/40 [animation-duration:2.4s]"
           />
           <WhatsAppIcon className="relative size-7" />
-        </motion.a>
+        </motion.span>
       )}
     </AnimatePresence>
   )

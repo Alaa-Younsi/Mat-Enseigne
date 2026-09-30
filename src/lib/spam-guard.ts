@@ -1,14 +1,13 @@
 /**
  * Client-side protections for the quote forms.
  *
- * The forms never send data anywhere themselves: they open WhatsApp with a pre-written
- * message that the visitor sends from their own account. That already rules out
- * automated spam delivery; these guards filter bots and abuse before WhatsApp even opens.
+ * The forms are demos and never send data anywhere; these guards still run on submit
+ * so the validation flow behaves like a production form.
  */
 
 /** A human needs at least this long to fill a form. */
 export const MIN_FILL_MS = 3_000
-/** Max WhatsApp hand-offs per browser within the window. */
+/** Max submissions per browser within the window. */
 export const MAX_SENDS = 3
 export const SEND_WINDOW_MS = 10 * 60 * 1000
 export const MAX_LINKS = 2
@@ -43,7 +42,7 @@ function readSends(storage: GuardInput['storage'], now: number): number[] {
   }
 }
 
-/** Decide whether a submission may open WhatsApp. */
+/** Decide whether a submission is accepted. */
 export function checkSubmission({
   honeypot,
   startedAt,
@@ -58,7 +57,7 @@ export function checkSubmission({
   return 'ok'
 }
 
-/** Remember a hand-off for the rate limit (best effort — storage may be unavailable). */
+/** Remember a submission for the rate limit (best effort — storage may be unavailable). */
 export function recordSubmission(storage: GuardInput['storage'], now: number) {
   try {
     storage?.setItem(STORAGE_KEY, JSON.stringify([...readSends(storage, now), now]))

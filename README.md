@@ -20,7 +20,7 @@
 
 ## Overview
 
-A fast, animated, fully responsive single-page application built for **Mat Enseigne**, a sign-making business in Paris & Île-de-France. It presents the company's services, showcases real projects through an interactive before/after slider, and turns visitors into quote requests delivered straight to WhatsApp.
+A fast, animated, fully responsive single-page application built for **Mat Enseigne**, a sign-making business in Paris & Île-de-France. It presents the company's services, showcases real projects through an interactive before/after slider, and walks visitors through a quote request. It is published as a portfolio showcase, so the forms are demos and send nothing.
 
 The design system is built around a three-colour palette (cream, aubergine and ember) with Bauhaus-inspired shapes and "neon sign" effects that echo the trade.
 
@@ -67,7 +67,7 @@ The design system is built around a three-colour palette (cream, aubergine and e
 ## Features
 
 - **Before/after slider.** Drag with a mouse or finger, or use the keyboard, to reveal the result. It runs on GPU transforms only, holding 60 fps even with the CPU throttled 4×.
-- **Quote requests via WhatsApp.** Both forms validate the input, then open WhatsApp with a clean, pre-written message addressed to the business.
+- **Quote forms (demo).** A quick form and a three-step wizard with full validation. On submit they show a confirmation, and nothing is sent or stored.
 - **Spam protection without a backend.** A honeypot field, a minimum fill time, a link-spam filter, per-browser rate limiting and input sanitising.
 - **Motion design.** Smooth scrolling, a pinned horizontal timeline, a scroll-driven reveal, split-text headings, magnetic buttons and page-transition curtains.
 - **Responsive and accessible.** Tested from 320 px to 1920 px, with keyboard support, focus management, ARIA labelling and full `prefers-reduced-motion` support.
@@ -134,10 +134,10 @@ Copy `.env.example` to `.env.local` to set it locally.
    ├─ components/
    │  ├─ layout/            Header, footer, page transitions, smooth scroll
    │  └─ ui/                Reusable UI: slider, buttons, reveals, lightbox…
-   ├─ config/site.ts        Business details (name, phone, WhatsApp, Instagram)
+   ├─ config/site.ts        Business details (name, area, Instagram)
    ├─ data/                 All page content: services, projects, FAQ…
    ├─ hooks/                Scrolling, navigation, page meta, form submission
-   ├─ lib/                  WhatsApp message builder, spam guard (with tests)
+   ├─ lib/                  Spam guard (with tests)
    ├─ pages/                Home, Portfolio, Contact, Legal notice, 404
    ├─ sections/             Home page sections
    └─ styles/globals.css    Design tokens and global styles
@@ -147,7 +147,7 @@ Copy `.env.example` to `.env.local` to set it locally.
 
 **Text and business details** are kept apart from the components:
 
-- `src/config/site.ts` holds the phone number, WhatsApp, Instagram and service area.
+- `src/config/site.ts` holds the business name, Instagram and service area.
 - `src/data/` holds the services, gallery, process steps and FAQ.
 
 **Adding a before/after project:**
